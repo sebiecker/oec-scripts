@@ -67,20 +67,6 @@ jobs:
       run: cp -R ${{ github.event.inputs.integration }}/. .release/oec-linux/${{ env.INTEGRATION_FOLDER }}
     - name: Remove http script (todo remove when http version is released)
       run: rm -f .release/oec-linux/${{ env.INTEGRATION_FOLDER }}/scripts/http.py
-    - name: Check Incoming part exists
-      id: check_files
-      uses: andstor/file-existence-action@v1
-      with:
-        files: ".release/oec-linux/${{ env.INTEGRATION_FOLDER }}/opsgenie-${{ env.INTEGRATION_NAME }}"
-    - name: "Release Incoming Part"
-      working-directory: .release
-      if: steps.check_files.outputs.files_exists == 'true'
-      run: |
-        INTEGRATION_PATH=oec-linux/${{ env.INTEGRATION_FOLDER }}/opsgenie-${{ env.INTEGRATION_NAME }}
-        echo ${INTEGRATION_PATH}
-        go get -u github.com/alexcesaro/log && \
-        cd ${INTEGRATION_PATH} && \
-        GOOS=linux GOARCH=amd64 go build -o send2opsgenie send2opsgenie.go
     - name: Compressing Linux Package
       run: |
           cd .release/oec-linux/
@@ -130,20 +116,6 @@ jobs:
       run: cp -R release/oec-builder/oec-rpm/. .release/oec-rpm
     - name: Copy Integration Files
       run: cp -R ${{ github.event.inputs.integration }}/. .release/oec-rpm/oec-scripts
-    - name: Check Incoming part exists
-      id: check_files
-      uses: andstor/file-existence-action@v1
-      with:
-        files: ".release/oec-rpm/oec-scripts/opsgenie-${{ env.INTEGRATION_NAME }}"
-    - name: "Release Incoming Part"
-      working-directory: .release
-      if: steps.check_files.outputs.files_exists == 'true'
-      run: |
-        INTEGRATION_PATH=oec-rpm/oec-scripts/opsgenie-${INTEGRATION_NAME}
-        echo ${INTEGRATION_PATH}
-        go get -u github.com/alexcesaro/log && \
-        cd ${INTEGRATION_PATH} && \
-        GOOS=linux GOARCH=amd64 go build -o send2opsgenie send2opsgenie.go
     - name: Create RPM Package 
       working-directory: .release/oec-rpm
       run: |
