@@ -15,7 +15,7 @@ jobs:
     outputs:
       upload_url: ${{  steps.create_release.outputs.upload_url }}
       integration_name: ${{  steps.gather_params.outputs.INTEGRATION_NAME }}
-      integration_version: ${{  steps.gather_params.outputs.INTEGRATION_VERSION }}
+      integration_version: ${{ github.event.inputs.oec-version }}
     steps:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
